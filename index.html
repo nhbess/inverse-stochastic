@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solving Inverse Problems</title>
+    <meta
+      name="description"
+      content="Solving Inverse Problems in Stochastic Self-Organising Systems through Invariant Representations."
+    />
+    <link rel="icon" type="image/png" href="assets/figures/thumb.png" />
+    
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="assets/stylesheets/main_free.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="clarity/clarity.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/foundation.min.css"
+    />
+    <link
+      href="assets/fontawesome-free-6.6.0-web/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"
+    ></script>
+    <script src="assets/scripts/navbar.js"></script>
+    <!-- Comment to remove table of content. -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          "HTML-CSS": {
+            scale: 95,
+            fonts: ["Gyre-Pagella"],
+            imageFont: null,
+            undefinedFamily: "'Arial Unicode MS', cmbright"
+          },
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              processEscapes: true
+            }
+        });
+    </script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize counters
+        let figureCounter = 0;
+
+        // Number all figures
+        document.querySelectorAll(".caption").forEach((caption) => {
+          if (!caption.hasAttribute("data-no-number")) {
+            // Skip numbering if data-no-number is present
+            figureCounter++;
+            // If caption starts with "Figure:", replace it
+            if (caption.innerHTML.includes("<strong>Figure:</strong>")) {
+              caption.innerHTML = caption.innerHTML.replace(
+                "<strong>Figure:</strong>",
+                `<strong>Figure ${figureCounter}:</strong>`
+              );
+            }
+            // Add figure number as data attribute for referencing
+            caption.closest("div").setAttribute("data-figure", figureCounter);
+          }
+        });
+
+        // Replace figure references
+        document.querySelectorAll("span.fig-ref").forEach((ref) => {
+          const targetFig = ref.getAttribute("data-ref");
+          const figureElement = document.querySelector(
+            `div[data-figure="${targetFig}"]`
+          );
+          if (figureElement) {
+            ref.textContent = figureElement
+              .querySelector(".caption strong")
+              .textContent.replace(":", "");
+          }
+        });
+      });
+    </script>
+    <style>
+      .embedding-section {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        align-items: start;
+        margin-bottom: 2rem;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        min-width: 800px;
+      }
+      .embedding-section .embedding-text {
+        min-width: 350px;
+      }
+      .embedding-section .embedding-image {
+        min-width: 350px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Title Page -->
+    <!-- Dark Theme Example: Change the background colour dark and change the following div "blog-title" into "blog-title white". -->
+    <div
+      class="container blog"
+      id="first-content"
+      style="background-color: #e0e4e6"
+    >
+      <!-- If you don't have a project cover: Change "blog-title" into "blog-title no-cover"  -->
+      <div class="blog-title no-cover">
+        <div class="blog-intro">
+          <div>
+            <!-- <h1 class="title">
+              Solving Inverse Problems in Stochastic Self-Organising Systems through Invariant Representations
+            </h1> -->
+
+            <h1 class="title" style="text-align: center;">
+              Solving Inverse Problems in Stochastic Self-Organising Systems through Invariant Representations
+            </h1>
+
+          <div class="authors">
+            <a href="https://najarro.science" target="_blank" style="text-decoration: none;">
+              <div class="author" style="font-family: sans-serif;">
+                Elias Najarro
+              </div>
+            </a>
+
+            <a href="https://nhbess.github.io/nhbess/" target="_blank" style="text-decoration: none;">
+              <div class="author" style="font-family: sans-serif;">
+                Nicolas Bessone
+              </div>
+            </a>
+
+            <a href="https://sebastianrisi.com" target="_blank" style="text-decoration: none;">
+              <div class="author" style="font-family: sans-serif;">
+                Sebastian Risi
+              </div>
+            </a>
+          </div>
+
+            <p style="font-size: 0.8em; text-align: left; color: #555">
+              <!-- <sup>‡</sup>Equal contribution -->
+            </p>
+
+      <div style="text-align: center; margin: 2rem 0">
+        <video
+          width="100%"
+          height="auto"
+          preload="metadata"
+          style="max-width: 400px"
+          id="splashVideo"
+          muted
+          playsinline
+        >
+          <source src="assets/figures/heart2.mp4" type="video/mp4" />
+          <p style="color: #666; padding: 1rem">
+            Your browser does not support HTML5 video.
+            <a href="assets/figures/heart2.mp4" style="color: #0066cc"
+              >Download the video</a
+            >
+          </p>
+        </video>
+      </div>
+          
+<!-- 
+            <p class="abstract" style="text-align: center">
+              Self-organising systems demonstrate how simple local rules can
+              generate complex stochastic patterns. Many natural systems rely on
+              such dynamics, making self-organisation central to understanding
+              natural complexity. A fundamental challenge in modelling such
+              systems is solving the inverse problem: finding the unknown causal
+              parameters from macroscopic observations. This task becomes
+              particularly difficult when observations have a strong stochastic
+              component, yielding diverse yet equivalent patterns. Traditional
+              inverse methods fail in this setting, as pixel-wise metrics cannot
+              capture feature similarities between variable outcomes. In this
+              work, we introduce a novel inverse modelling method specifically
+              designed to handle stochasticity in the observable space,
+              leveraging the capacity of visual embeddings to produce robust
+              representations that capture perceptual invariances. By mapping
+              the pattern representations onto an invariant embedding space, we
+              can effectively recover unknown causal parameters without the need
+              for handcrafted objective functions or heuristics. We evaluate the
+              method on two canonical models--a reaction-diffusion system and an
+              agent-based model of social segregation--and show that it reliably
+              recovers parameters despite stochasticity in the outcomes. We
+              further apply the method to real biological patterns, highlighting
+              its potential as a tool for both theorists and experimentalists to
+              investigate the dynamics underlying complex stochastic pattern
+              formation.
+            </p> -->
+
+            <!-- Using FontAwesome Pro -->
+            <!-- <div class="info">
+                        <div>
+                            <a href="https://arxiv.org" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)"> Paper <i class="far fa-book-open"></i></a> &nbsp;&nbsp; 
+                            <a href="https://github.com" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)">Code <i class="far fa-code"></i></a>  &nbsp;&nbsp; 
+                            <a href="https://www.microsoft.com/en-gb/microsoft-365/powerpoint" class="button icon" style="background-color: rgba(255, 255, 255, 0.3);">Slides <i class="far fa-presentation"></i></a>  &nbsp;&nbsp; 
+                            <a href="https://huggingface.co/spaces" class="button icon" style="background-color: rgba(255, 255, 255, 0.3)">Demo <i class="fa-light fa-face-smiling-hands"></i></a>
+                        </div>
+                    </div> -->
+
+            <!-- Using FontAwesome Free -->
+            <div class="info" , style="text-align: center">
+              <div>
+                <a
+                  href="https://arxiv.org"
+                  class="button icon"
+                  style="background-color: rgba(255, 255, 255, 0.2)"
+                >
+                  Paper <i class="fa-solid fa-book-open"></i
+                ></a>
+                &nbsp;&nbsp;
+                <a
+                  href="https://github.com/enajx/InverseStochastic"
+                  class="button icon"
+                  style="background-color: rgba(255, 255, 255, 0.2)"
+                  >Code <i class="fa-solid fa-code"></i
+                ></a>
+                &nbsp;&nbsp;
+                <!-- <a
+                  href="https://www.microsoft.com/en-gb/microsoft-365/powerpoint"
+                  class="button icon"
+                  style="background-color: rgba(255, 255, 255, 0.2)"
+                  >Slides <i class="fa-regular fa-file-powerpoint"></i
+                ></a>
+                &nbsp;&nbsp;
+                <a
+                  href="https://huggingface.co/spaces/"
+                  class="button icon"
+                  style="background-color: rgba(255, 255, 255, 0.2)"
+                  >Demo <i class="fa-solid fa-laptop-code"></i
+                ></a> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="info"> 
+                    <p>CVPR 2048 / Best Paper Award</p>
+                </div>-->
+        </div>
+      </div>
+    </div>
+
+    <div class="container blog main first" id="blog-main">
+      <!-- <h1>Introduction</h1> -->
+
+
+      <p class="text">
+        Complex systems&mdash;such as cellular automata (CA),
+        reaction-diffusion, or agent-based models (ABM)&mdash;self-organise into
+        dynamical patterns driven by simple rules. The conventional modelling
+        approach of complex systems consists in making an educated guess of the
+        local rules, simulating them– be it a partial differential equation, a
+        cellular automaton, or an agent-based model–and observing whether the
+        emergent patterns are compatible with the phenomena we seek to explain.
+        This modelling approach has proven highly successful in providing
+        mechanistic understanding of a variety of phenomena, including early
+        work on social segregation in urban environments, sociology, financial
+        markets dynamics , and ecology.
+      </p>
+      <p class="text">
+        Inverse modelling formulates the problem in the reverse causal
+        direction:
+        <em
+          >&ldquo;Given these macroscopic observations, what are the underlying
+          rules that produce them?&rdquo;</em
+        >
+        An inverse model takes an observation as input and returns the model, or
+        initial configuration, that generates it. 
+      </p>
+
+      <div
+        style="
+          float: right;
+          width: 45%;
+          margin-left: 2rem;
+          margin-bottom: 1rem;
+          text-align: center;
+        "
+      >
+        <img
+          src="assets/figures/inverse_diagram_classic.png"
+          alt="Inverse problem diagram"
+          style="width: 100%"
+        />
+        <p class="caption">
+          Inverse modelling consists in finding the mapping from observations to their causal space (also
+          referred to as <em>parameter space</em>, <em>solution space</em>, or
+          <em>domain space</em> in the literature). It presents several
+          challenges: (i) solutions may not exist for all observations; (ii) the
+          problem of uniqueness—multiple causes may produce identical
+          observations; and (iii) observations may be stochastic, resulting in
+          different observed patterns for the same model parameters. Our method
+          seeks to address the challenge of stochasticity in the observable
+          space.
+        </p>
+      </div>
+
+      <p class="text">
+        A major challenge in inverse problems is the presence of stochasticity
+        in the observations. Natural phenomena, notably those associated with
+        complex systems, exhibit sensitivity to initial conditions. That is, the
+        same model, under slightly different initial conditions, evolves towards
+        divergent patterns. Often, these patterns share high-level features but
+        do not match when compared pixel by pixel. They are stochastic instances
+        of the same class of patterns. For instance, while every human
+        fingerprint is unique, they all share characteristic features that make
+        them recognizable as fingerprints. Similarly, no two leopards have
+        identical spot motifs, yet all are immediately identifiable as leopard
+        patterns.
+      </p>
+
+      <p class="text">
+        We introduce here a method that addresses the challenge of
+        solving inverse problems in systems with stochastic observable patterns.
+        The method operates by mapping target patterns onto an invariant
+        embedding representation, enabling the recovery of inverse parameters in
+        stochastic self-organising systems without the need for heuristics or
+        hand-crafted loss functions.
+      </p>
+    </div>
+
+    <div class="container blog main">
+      <!-- <h1>Background</h1> -->
+
+      <h2>Self-organising systems</h2>
+      <p class="text">
+        Self-organization, understood as the spontaneous emergence of global
+        order or coordination from local interactions, occurs in physical,
+        biological, and social systems. Examples include morphogenesis, animal
+        skin patterns, bird flocking, and social dynamics such as Schelling's
+        segregation model, where simple local rules give rise to large-scale
+        patterns.
+      </p>
+      <p class="text">
+        These systems are highly sensitive to initial conditions, leading to
+        stochastic outcomes. For instance, the formation of fingerprints or skin
+        patterns varies between individuals due to small differences in early
+        conditions. This variability poses challenges for inverse modelling,
+        which requires a metric capable of recognising equivalence across
+        different realisations of the same underlying process.
+      </p>
+
+      <h2>Inverse problems</h2>
+
+      <p class="text">
+        Solving an <em>inverse problem</em> consists in determining the unknown
+        parameters, or initial conditions, of a system from observations of its
+        outcomes. Contrarily, <em>forward problems</em> unambiguously map inputs
+        to outputs using the system model. Formally, solving an inverse problem
+        requires finding $(\theta, s_0) \in \Theta \times S$ such that
+        $F(\theta, s_0) = y_{\text{obs}}$, where $F: \Theta \times S \to Y$
+        denotes the forward model mapping parameters $\theta \in \Theta$ and
+        initial states $s_0 \in S$ to observed data $y_{\text{obs}} \in Y$.
+        Inverse problems are typically ill-posed, characterised by solution
+        non-uniqueness and sensitivity. These properties link inverse problems
+        to complex systems: small changes in their parameters or initial state
+        can result in divergent outcomes. As such, recovering the causal
+        parameters—i.e., solving the inverse problem—shares similar challenges
+        to ill-posed inverse problems.
+      </p>
+
+
+      <div
+        style="
+          float: right;
+          width: 45%;
+          margin-left: 2rem;
+          text-align: center;
+        "
+      >
+        <img
+          src="assets/figures/examples runs stochastic new.png"
+          style="width: 100%"
+          alt="Stochasticity in self-organising systems"
+        />
+        <p class="caption">
+          <b>Stochasticity in self-organising systems.</b> 
+          <em>Top:</em> Reaction-diffusion model, where stochasticity arises
+          from varying initial conditions.
+          <em>Bottom:</em> Schelling's model, where stochasticity is embedded in
+          the model $F$ via asynchronous updates. Both how the a single model can result in stochasticity
+          in the observable space.
+        </p>
+      </div>
+
+
+      <p class="text">
+        Stochasticity can be present in inverse problems in two distinct ways.
+        <b>Stochasticity in the causal space:</b> multiple parameters or initial
+        conditions $(\theta, s_0) \in \Theta \times S$ map to identical or
+        nearly identical observations $y_{\text{obs}} \in Y$, resulting in
+        degenerate solutions and non-uniqueness, i.e., non-injectivity of $F$.
+        In this case, the unknown quantities in the causal space are
+        distributions. An example is seismic tomography, which uses seismic
+        waves recorded at the surface to reconstruct the Earth's interior.
+        Solutions are non-unique: similar surface measurements can originate
+        from different inner structures.
+        <b>Stochasticity in the observable space:</b> in this case, observations
+        are inherently stochastic. Either resulting from randomness in initial
+        states, such as in reaction-diffusion systems ($y_{\text{obs}} =
+        F(\theta, s_0)$ with $s_0 \sim \mathcal{S}$), or from intrinsic
+        stochasticity in the forward model $F$, as in the asynchronous updates
+        of an agent-based model.
+      </p>
+
+
+      <p class="text">
+        The existing literature on
+        <em>inverse stochastic modelling</em> exclusively focusses on the first
+        case: how to address stochasticity in the causal space, where similar
+        observations can have different causal origins. On the contrary, the
+        method proposed in this work addresses the challenge of stochasticity in
+        the observable space.
+      </p>
+
+      <h2>Embedding representations</h2>
+      <div class="embedding-section">
+        <div class="embedding-text">
+          <p class="text">
+            Visual embeddings are vector representations that capture high-level
+            image features such as shape, structure, and texture, going beyond
+            raw pixel values. They embed similar images close together in a
+            lower-dimensional space, providing a natural way to compare pattern
+            similarity.
+          </p>
+          <p class="text">
+            These embeddings are often invariant under transformations, making
+            them suitable for comparing patterns with stochastic variations.
+            This work uses the visual encoder of CLIP, a contrastively trained
+            model that outputs 512-dimensional embeddings without requiring
+            task-specific fine-tuning. This makes it effective for capturing
+            visual similarity between generated and target patterns, as illustrated in the figure to the right.
+          </p>
+        </div>
+        
+        
+        <div class="embedding-image">
+          <img
+            src="assets/figures/pitfalls_DM.png"
+            alt="Distance matrix visualization"
+            style="width: 100%"
+          />
+          <p class="caption">
+            Examples of distance in embedding space between different patterns. Each of the patterns is an unique
+            instantiation from two different classes. The embedding model maps patterns of the same class (with
+            similar visual features) to similar embedding representations. Displayed values are
+            pairwise cosine distances $1 - \cos(z_i, z_j)$
+          </p>
+        </div>
+      </div>
+
+      <!-- add some empty space here -->
+      <div style="height: 1rem"></div>
+
+      <div style="text-align: center; margin: 2rem 0">
+        <video
+          width="100%"
+          height="auto"
+          preload="metadata"
+          style="max-width: 800px"
+          id="embeddingVideo1"
+          muted
+          playsinline
+        >
+          <source src="assets/figures/embedding diagram.mp4" type="video/mp4" />
+          <p style="color: #666; padding: 1rem">
+            Your browser does not support HTML5 video.
+            <a href="assets/figures/embedding diagram.mp4" style="color: #0066cc"
+              >Download the video</a
+            >
+            instead.
+          </p>
+        </video>
+        <p class="caption">
+          <b>Building invariant representations.</b> Parameters $\theta$ in the causal space generate
+          patterns $y$ in the observable space. Those patterns are mapped by the
+          visual embedding onto vectors $z$ in the embedding space. Similar
+          patterns in the observable space are mapped to nearby points in the
+          embedding space.
+        </p>
+      </div>
+    </div>
+
+    <div class="container blog main">
+      <h1>Using Invariant Representations to Solve Inverse Problems in Stochastic System</h1>
+
+      <p class="text">
+        A common approach to solving inverse problems is to formulate them as
+        optimisation problems by defining a loss function that measures the
+        discrepancy between target data and predictions. However, pixel-based
+        metrics are unable to meaningfully capture feature similarities between
+        stochastic patterns, since they cannot account for the intrinsic
+        variations often present in self-organising patterns. To solve inverse
+        problems with stochasticity in the observable space, a metric capable of
+        capturing the feature-level similarities rather than exact pixel-level
+        matches is needed. Embedding representations offer an effective solution
+        to this challenge by encoding features and invariances of the patterns.
+        The idea behind our method is straightforward: map stochastic
+        patterns onto an embedding space where perceptually similar patterns
+        have similar vector representations. Then, use these invariant
+        representations to solve the inverse problem of finding the unknown
+        parameters that generate the stochastic patterns we seek to reconstruct.
+        In the case of CLIP, the loss
+        metric is cosine similarity. By focusing on high-level visual
+        similarities rather than pixel-level matches, the method is robust to
+        stochastic variations, and is able to solve inverse problems across
+        entire families of patterns with shared visual features—without
+        requiring handcrafted loss functions.
+      </p>
+<!-- 
+      <p class="text">
+        The method operates as follows:
+        <span
+          style="
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e8e8e8;
+            color: #333;
+            font-weight: 500;
+            margin-right: 0.5em;
+          "
+          >1</span
+        >
+        sample a set of parameters $\theta_i$ and random initial states $s_0
+        \sim \mathcal{S}$,
+        <span
+          style="
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e8e8e8;
+            color: #333;
+            font-weight: 500;
+            margin-right: 0.5em;
+          "
+          >2</span
+        >
+        generate the corresponding patterns $y_i$ through the forward model $F$,
+        <span
+          style="
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e8e8e8;
+            color: #333;
+            font-weight: 500;
+            margin-right: 0.5em;
+          "
+          >3</span
+        >
+        use the embedding model to encode the resulting patterns into the
+        embedding space $z$,
+        <span
+          style="
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e8e8e8;
+            color: #333;
+            font-weight: 500;
+            margin-right: 0.5em;
+          "
+          >4</span
+        >
+        compute the loss between the target $z_{target}$ and the candidate
+        solutions, and
+        <span
+          style="
+            display: inline-block;
+            width: 1.2em;
+            height: 1.2em;
+            line-height: 1.2em;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e8e8e8;
+            color: #333;
+            font-weight: 500;
+            margin-right: 0.5em;
+          "
+          >5</span
+        >
+        update the optimiser accordingly. In the case of CLIP, the loss metric
+        is cosine similarity. By focusing on high-level visual similarities
+        rather than pixel-level matches, the method is robust to stochastic
+        variations, and is able to solve inverse problems across entire families
+        of patterns with shared visual features--without requiring handcrafted
+        loss functions.
+      </p> -->
+
+      <div style="text-align: center; margin: 2rem 0">
+        <video
+          width="100%"
+          height="auto"
+          preload="metadata"
+          style="max-width: 800px; clip-path: inset(0 0 2px 0)"
+          id="embeddingVideo2"
+          muted
+          playsinline
+        >
+          <source src="assets/figures/diagram_layered.mp4" type="video/mp4" />
+        </video>
+        <p class="caption">
+          The method operates by mapping stochastic patterns
+          onto an embedding space where perceptually similar patterns have
+          similar vector representations. A black-box optimiser then iteratively
+          searches for parameters that generate patterns with similar embeddings
+          to the target pattern. By comparing patterns in this embedding space
+          rather than pixel-wise, the optimiser can efficiently find parameters
+          that produce visually similar patterns to the target, even when the
+          underlying dynamics are stochastic.
+        </p>
+      </div>
+    </div>
+
+    <div class="container blog main">
+      <!-- <h1>Results</h1>
+      <p class="text">
+        In this section, we present the results of applying the method to two
+        self-organising systems: a reaction-diffusion system known as the
+        Gray-Scott model, and Schelling's agent-based model of segregation. We
+        chose these two distinct systems, both in terms of scientific domain
+        (biophysical vs. social) and the underlying mathematical model (PDE vs.
+        ABM), to highlight the generality of the method. We first introduce the
+        models, then formulate them as inverse problems, and subsequently
+        present the results of applying the method.
+      </p> -->
+
+      <h1>Reaction-Diffusion System</h1>
+      <p class="text">
+        Let's first apply the method to Gray-Scott, a reaction-diffusion model used to study pattern formation
+        in developmental systems. It describes how spatially distributed
+        concentrations of two interacting substances—or morphogens—evolve over
+        time. Morphogens play a critical role in developmental biology by
+        guiding cell differentiation and tissue patterning through their
+        concentration gradients. $u$ represents a nutrient or precursor
+        substance, while $v$ acts as an autocatalyst that promotes its own
+        production while consuming $u$. The interaction between $u$ and $v$,
+        combined with their ability to diffuse through space, leads to the
+        emergence of complex patterns such as spots, stripes, or labyrinths.
+        Through this interplay, the Gray-Scott model provides insights into how
+        local reactions and diffusion contribute to the self-organisation of
+        biological structures. The model is formalised as two partial
+        differential equations:
+      </p>
+
+      <div
+        style="
+          display: flex;
+          gap: 2rem;
+          margin: 1rem 0;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            flex: 0.55;
+            display: flex;
+            flex-direction: column;
+            align-items: right;
+          "
+          class="text"
+        >
+          \[ \begin{aligned} \frac{\partial u}{\partial t} &= D_u \nabla^2 u -
+          uv^2 + f(1 - u) \\ \frac{\partial v}{\partial t} &= D_v \nabla^2 v +
+          uv^2 - (f + k)v \end{aligned} \]
+        </div>
+        <div
+          style="
+            flex: 0.65;
+            display: flex;
+            flex-direction: column;
+            align-items: right;
+          "
+          class="text"
+        >
+          <div style="margin-bottom: 0.2em; color: #555">
+            $u$ and $v$ are the chemical concentrations.
+          </div>
+          <div style="margin-bottom: 0.2em; color: #555">
+            $D_u$ and $D_v$ are the diffusion rates for $u$ and $v$.
+          </div>
+          <div style="margin-bottom: 0.2em; color: #555">
+            $f$ is the feed rate of $u$.
+          </div>
+          <div style="margin-bottom: 0.2em; color: #555">
+            $k$ is the kill rate of $v$.
+          </div>
+          <div style="color: #555">
+            $\nabla^2$ is the Laplacian representing diffusion.
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive RD Visualization -->
+      <!-- <h3 id="interactive-rd">Interactive Reaction-Diffusion Simulation</h3> -->
+       <!-- empty space -->
+      <div style="height: 1rem"></div>
+      <div class="interactive-section">
+        <div
+          class="rd-container"
+          style="
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+          "
+        >
+          <!-- Controls -->
+          <div
+            class="controls"
+            style="
+              flex: 1;
+              max-width: 250px;
+              display: flex;
+              flex-direction: column;
+              height: 500px;
+              font-size: 0.85em;
+            "
+          >
+            <!-- Presets Section -->
+            <div class="control-section" style="margin-bottom: 0.75rem">
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Presets $y_i$
+              </h4>
+              <select
+                id="presetSelect"
+                class="select-input"
+                style="
+                  width: 100%;
+                  padding: 0.25rem;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  background: white;
+                  font-size: 0.9em;
+                  margin-bottom: 1rem;
+                "
+              >
+                <option value="">Select a preset...</option>
+                <option
+                  value="y0"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₀
+                </option>
+                <option
+                  value="y1"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₁
+                </option>
+                <option
+                  value="y2"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₂
+                </option>
+                <option
+                  value="y3"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₃
+                </option>
+                <option
+                  value="y4"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₄
+                </option>
+                <option
+                  value="y5"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₅
+                </option>
+                <option
+                  value="y6"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₆
+                </option>
+                <option
+                  value="y7"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₇
+                </option>
+                <option
+                  value="y8"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₈
+                </option>
+                <option
+                  value="y9"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₉
+                </option>
+                <option
+                  value="y10"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₁₀
+                </option>
+                <option
+                  value="y11"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₁₁
+                </option>
+              </select>
+            </div>
+
+            <!-- Model Parameters -->
+            <div
+              class="parameters-section"
+              style="margin-bottom: 0.75rem; flex-grow: 1"
+            >
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Model Parameters
+              </h4>
+
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="dA"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Diffusion Rate $D_u$</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="dA"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="1.0"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="dAValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >1.0</span
+                  >
+                </div>
+              </div>
+
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="dB"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Diffusion Rate $D_v$</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="dB"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.5"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="dBValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >0.5</span
+                  >
+                </div>
+              </div>
+
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="f"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Feed Rate ($f$)</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="f"
+                    min="0"
+                    max="0.1"
+                    step="0.001"
+                    value="0.055"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="fValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >0.055</span
+                  >
+                </div>
+              </div>
+
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="k"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Kill Rate ($k$)</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="k"
+                    min="0"
+                    max="0.1"
+                    step="0.001"
+                    value="0.062"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="kValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >0.062</span
+                  >
+                </div>
+              </div>
+
+              <!-- Padding Mode Selection -->
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <!-- <label
+                  for="padMode"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Padding Mode</label
+                > -->
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Padding Mode
+              </h4>
+                <select
+                  id="padMode"
+                  class="select-input"
+                  style="
+                    width: 100%;
+                    padding: 0.25rem;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    background: white;
+                    font-size: 0.8em;
+                  "
+                >
+                  <option value="circular">Circular</option>
+                  <option value="constant">Constant</option>
+                </select>
+              </div>
+
+              <!-- Initial State -->
+              <div class="parameter-group">
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Initial State
+              </h4>
+                <!-- <label
+                  for="seedType"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Initial State ($s_0$)</label
+                > -->
+                <select
+                  id="seedType"
+                  class="select-input"
+                  style="
+                    width: 100%;
+                    padding: 0.25rem;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    background: white;
+                    font-size: 0.8em;
+                  "
+                >
+                  <option value="circle">Simple Circle</option>
+                  <option value="triple">Triple Circles</option>
+                  <option value="random">Smooth Random</option>
+                  <option value="random_oval">Random Oval</option>
+                  <option value="random_rectangle">Random Rectangle</option>
+                  <option value="random_circle">Large Random Circle</option>
+                  <option value="random_circle_small">
+                    Small Random Circle
+                  </option>
+                  <option value="random_cross">Random Cross</option>
+                  <option value="random_thin_stripes">Thin Stripes</option>
+                  <option value="random_thick_stripes">Thick Stripes</option>
+                  <option value="random_triangle">Random Triangle</option>
+                  <option value="random_square">Random Square</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons" style="margin-bottom: 0.75rem">
+              <button
+                id="startStop"
+                class="button icon"
+                style="
+                  width: 100%;
+                  margin-bottom: 0.4rem;
+                  padding: 0.35rem;
+                  font-size: 0.8em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i class="fa-solid fa-play"></i> Start/Stop
+              </button>
+              <button
+                id="reset"
+                class="button icon"
+                style="
+                  width: 100%;
+                  padding: 0.35rem;
+                  font-size: 0.8em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i class="fa-solid fa-rotate"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="canvas-container" style="flex: 2">
+            <canvas
+              id="rdCanvas"
+              width="500"
+              height="500"
+              style="
+                width: 100%;
+                max-width: 500px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+              "
+            ></canvas>
+            <p class="caption">
+              Try different initial conditions and parameters to explore the
+              variety of possible patterns.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- <h3>Reaction-Diffusion Results</h3> -->
+
+      <p class="text">
+        We apply our method to find the unknown parameters of the Gray-Scott
+        reaction-diffusion model from different target patterns. The method
+        successfully recovers parameters that generate patterns matching the
+        targets, despite the stochastic nature of the system arising from random
+        initial conditions. Each row in the figure below shows a different target
+        pattern (leftmost column) followed by ten independent reconstructions
+        using our method. The consistency of the reconstructions across
+        different runs demonstrates the robustness of the method to
+        stochasticity in the observable space.
+      </p>
+
+      <p class="text">
+        The results show that our method can effectively handle a wide range of
+        pattern types, from spots and stripes to more complex labyrinthine
+        structures. This versatility is particularly important in the context of
+        reaction-diffusion systems, where small changes in parameters can lead
+        to qualitatively different patterns. The method's ability to
+        consistently recover parameters that generate visually similar patterns,
+        regardless of the specific initial conditions, suggests that it has
+        successfully learned to focus on the essential features that
+        characterize each pattern family.
+      </p>
+
+      <div style="text-align: center; margin: 2rem 0">
+        <img
+          src="assets/figures/gray_scott_result_grid_.svg"
+          alt="Gray-Scott Model Results Grid"
+          style="width: 100%; max-width: 100%"
+        />
+        <p class="caption">
+          Results for Gray-Scott model. Twelve target patterns
+          (left column), each produced by simulating Gray-Scott model for
+          different parameters $\theta_i$ and random initial states $s_{0i}$.
+          The reconstructions columns show the patterns $y_i^n$ recovered by our
+          method for 10 independent training runs.
+        </p>
+      </div>
+
+      <h1>Schelling's Model of Segregation</h1>
+      <p class="text">
+        The second system we use to demonstrate the method is Schelling's
+        segregation model, a classic computational model used to study the
+        emergence of spatial patterns in social systems. It illustrates how
+        individual preferences for neighbourhood composition can lead to
+        large-scale segregation, even with mild preferences. This model has been
+        highly influential in computational social science, specifically
+        contributing to the understanding of residential segregation and its
+        implications for urban planning and social dynamics. Schelling's model
+        has a historical significance in computational social science, as it was
+        one of the first to demonstrate how simple local rules can produce
+        complex emergent behaviours, showing the potential of agent-based models
+        to investigate social systems. It is for this latter reason that we
+        chose to demonstrate our method with it.
+      </p>
+      <p class="text">
+        Our implementation consists of two classes of agents, distributed on a
+        spatial grid. Each agent evaluates its satisfaction based on the
+        proportion of similar neighbours in its local neighbourhood. Unsatisfied
+        agents with their current location will asynchronously relocate to a
+        random location to improve their satisfaction. Schelling's model leads
+        to the emergence of complex segregation patterns that match those
+        observed in urban environments.
+      </p>
+
+      <div
+        style="
+          display: flex;
+          gap: 2rem;
+          margin: 1rem 0;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            flex: 0.55;
+            display: flex;
+            flex-direction: column;
+            align-items: right;
+          "
+          class="text"
+        >
+          \[ S_i = \begin{cases} 1 & \text{if }
+          \frac{N_{\text{similar}}}{N_{\text{total}}} \geq T \\ 0 &
+          \text{otherwise} \end{cases} \]
+        </div>
+        <div
+          style="
+            flex: 0.65;
+            display: flex;
+            flex-direction: column;
+            align-items: right;
+          "
+          class="text"
+        >
+          <div style="margin-bottom: 0.2em; color: #555">
+            $S_i$ is the satisfaction of agent $i$.
+          </div>
+          <div style="margin-bottom: 0.2em; color: #555">
+            $N_{\text{similar}}$ is the number of similar neighbours.
+          </div>
+          <div style="margin-bottom: 0.2em; color: #555">
+            $N_{\text{total}}$ is the total number of neighbours.
+          </div>
+          <div style="color: #555">
+            $T$ is the agent's tolerance threshold, $T \in [0,1]$.
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Schelling Visualization -->
+      <!-- <h3 id="interactive-schelling">Interactive Segregation Simulation</h3> -->
+      <div style="height: 1rem"></div>
+
+      <div class="interactive-section">
+        <div
+          class="sh-container"
+          style="
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+          "
+        >
+          <div
+            class="controls"
+            style="
+              flex: 1;
+              max-width: 250px;
+              display: flex;
+              flex-direction: column;
+              height: 500px;
+              font-size: 0.85em;
+            "
+          >
+            <!-- Presets Section -->
+            <div class="control-section" style="margin-bottom: 0.75rem">
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Presets $y_i$
+              </h4>
+              <select
+                id="shPresetSelect"
+                class="select-input"
+                style="
+                  width: 100%;
+                  padding: 0.25rem;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  background: white;
+                  font-size: 0.9em;
+                  margin-bottom: 1rem;
+                "
+              >
+                <option value="">Select a preset...</option>
+                <option
+                  value="y0"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₀
+                </option>
+                <option
+                  value="y1"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₁
+                </option>
+                <option
+                  value="y2"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₂
+                </option>
+                <option
+                  value="y3"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₃
+                </option>
+                <option
+                  value="y4"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₄
+                </option>
+                <option
+                  value="y5"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₅
+                </option>
+                <option
+                  value="y6"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₆
+                </option>
+                <option
+                  value="y7"
+                  style="
+                    font-family: 'Times New Roman', Times, serif;
+                    font-style: italic;
+                  "
+                >
+                  y₇
+                </option>
+              </select>
+            </div>
+
+            <!-- Parameters -->
+            <div
+              class="parameters-section"
+              style="margin-bottom: 0.75rem; flex-grow: 1"
+            >
+              <h4 style="margin-bottom: 0.4rem; color: #333; font-size: 0.85em">
+                Model Parameters
+              </h4>
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="want_similar"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Similarity Threshold ($T$)</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="want_similar"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.7"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="want_similarValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >0.7</span
+                  >
+                </div>
+              </div>
+
+              <div class="parameter-group" style="margin-bottom: 0.6rem">
+                <label
+                  for="density"
+                  style="
+                    display: block;
+                    margin-bottom: 0.2rem;
+                    font-size: 0.8em;
+                  "
+                  >Population Density ($\rho$)</label
+                >
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <input
+                    type="range"
+                    id="density"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.9"
+                    style="flex: 1; height: 0.5rem"
+                  />
+                  <span
+                    class="value"
+                    id="densityValue"
+                    style="
+                      min-width: 2.5em;
+                      text-align: right;
+                      font-size: 0.8em;
+                    "
+                    >0.9</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons" style="margin-bottom: 0.75rem">
+              <button
+                id="shStartStop"
+                class="button icon"
+                style="
+                  width: 100%;
+                  margin-bottom: 0.4rem;
+                  padding: 0.35rem;
+                  font-size: 0.8em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i class="fa-solid fa-play"></i> Start/Stop
+              </button>
+              <button
+                id="shReset"
+                class="button icon"
+                style="
+                  width: 100%;
+                  padding: 0.35rem;
+                  font-size: 0.8em;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 0.5rem;
+                "
+              >
+                <i class="fa-solid fa-rotate"></i> Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="canvas-container" style="flex: 2">
+            <canvas
+              id="shCanvas"
+              width="500"
+              height="500"
+              style="
+                width: 100%;
+                max-width: 500px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+              "
+            ></canvas>
+            <p class="caption">
+              Adjust the similarity threshold to see how individual preferences
+              affect overall segregation patterns.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <script src="assets/scripts/sh.js"></script>
+      <script>
+        // Schelling Model Setup
+        const shCanvas = document.getElementById("shCanvas");
+        const shCtx = shCanvas.getContext("2d");
+        const gridSize = 50;
+        let shIsRunning = false;
+        let shAnimationId = null;
+
+        // Initialize Schelling simulation
+        let sh = new SchellingModel(gridSize, gridSize, {
+          want_similar: 0.7,
+          density: 0.9,
+        });
+
+        // Render function for Schelling model
+        function renderSchelling() {
+          const state = sh.getState();
+          const cellWidth = shCanvas.width / gridSize;
+          const cellHeight = shCanvas.height / gridSize;
+
+          shCtx.clearRect(0, 0, shCanvas.width, shCanvas.height);
+
+          for (let i = 0; i < state.length; i++) {
+            const x = (i % gridSize) * cellWidth;
+            const y = Math.floor(i / gridSize) * cellHeight;
+
+            if (state[i] === 0) {
+              shCtx.fillStyle = "#a9a9a9"; // Gray
+            } else if (state[i] === 1) {
+              shCtx.fillStyle = "#3182bd"; // Blue
+            } else {
+              shCtx.fillStyle = "#ffffff"; // White for empty
+            }
+
+            shCtx.fillRect(x, y, cellWidth, cellHeight);
+          }
+        }
+
+        // Animation loop for Schelling model
+        function animateSchelling() {
+          if (!shIsRunning) return;
+
+          sh.step();
+          renderSchelling();
+          shAnimationId = requestAnimationFrame(animateSchelling);
+        }
+
+        // Event Listeners for Schelling model
+        document.getElementById("shStartStop").addEventListener("click", () => {
+          shIsRunning = !shIsRunning;
+          if (shIsRunning) {
+            animateSchelling();
+          } else {
+            cancelAnimationFrame(shAnimationId);
+          }
+        });
+
+        document.getElementById("shReset").addEventListener("click", () => {
+          sh = new SchellingModel(gridSize, gridSize, {
+            want_similar: parseFloat(
+              document.getElementById("want_similar").value
+            ),
+            density: parseFloat(document.getElementById("density").value),
+          });
+          renderSchelling();
+        });
+
+        // Parameter change listeners
+        ["want_similar", "density"].forEach((param) => {
+          const element = document.getElementById(param);
+          element.addEventListener("input", () => {
+            document.getElementById(param + "Value").textContent =
+              element.value;
+            sh.params[param] = parseFloat(element.value);
+          });
+        });
+
+        // Presets configuration for Schelling model
+        const shPresets = {
+          y0: { want_similar: 0.1, density: 0.9 },
+          y1: { want_similar: 0.2, density: 0.9 },
+          y2: { want_similar: 0.3, density: 0.9 },
+          y3: { want_similar: 0.4, density: 0.9 },
+          y4: { want_similar: 0.5, density: 0.9 },
+          y5: { want_similar: 0.6, density: 0.9 },
+          y6: { want_similar: 0.7, density: 0.9 },
+          y7: { want_similar: 0.8, density: 0.9 },
+        };
+
+        // Add preset dropdown listener for Schelling model
+        document
+          .getElementById("shPresetSelect")
+          .addEventListener("change", (e) => {
+            const preset = shPresets[e.target.value];
+            if (!preset) return;
+
+            // Update parameters
+            Object.entries(preset).forEach(([param, value]) => {
+              document.getElementById(param + "Value").textContent =
+                value.toFixed(2);
+              document.getElementById(param).value = value;
+            });
+
+            sh = new SchellingModel(gridSize, gridSize, preset);
+            renderSchelling();
+          });
+
+        // Remove the old preset buttons (presetLow, presetMed, presetHigh)
+        document.getElementById("presetLow")?.remove();
+        document.getElementById("presetMed")?.remove();
+        document.getElementById("presetHigh")?.remove();
+
+        // Initial render
+        renderSchelling();
+      </script>
+
+      <!-- <h3>Schelling's Model Results</h3> -->
+
+      <p class="text">
+        In this experiment, we applied the described method to find the
+        tolerance $T$ from different Schelling segregation patterns. We use a
+        grid size of 100 by 100, and an occupation density of 90%. The results
+        of the experiment are shown in the figure below. 
+      </p>
+
+      <div style="text-align: center; margin: 2rem 0">
+        <img
+          src="assets/figures/schelling_result_grid_.svg"
+          alt="Schelling Model Results Grid"
+          style="width: 100%; max-width: 100%"
+        />
+        <p class="caption">
+          Results for Schelling's segregation model. Eight
+          target patterns (left column), each produced by simulating Schelling's
+          model for different parameters $\theta$ and random initial states
+          $s_{0i}$. The reconstructions columns show the patterns $y_i^n$
+          recovered by our method for 10 independent training runs.
+        </p>
+      </div>
+    </div>
+
+    <div class="container blog main">
+      <h1>Conclusion</h1>
+      <p class="text">
+        We have presented here a method for solving inverse problems in
+        stochastic self-organising systems by leveraging invariant visual
+        representations from embedding models—without the need to handcraft
+        metric functions to capture the visual similarities between patterns.
+        The key idea is to shift the optimisation from pixel space to an
+        embedding space where perceptually similar patterns are mapped to nearby
+        points, allowing the recovery of unknown parameters, even those
+        resulting in stochastic patterns. Unlike existing techniques in inverse
+        modelling, the method addresses the issue of stochasticity in the
+        observable space, rather than in the causal space. The method provides a simple yet effective technique for
+        theorists and experimentalists to investigate and control
+        self-organising stochastic systems.
+
+      </p>
+    </div>
+
+    <div class="container blog main">
+      <h1>Citation</h1>
+      <pre><code class="plaintext">@article{doe2048agi,
+    title={Artificial General Intelligence},
+    author={Doe John},
+    journal={nature},
+    year={2048}
+}</code></pre>
+    </div>
+
+    <!-- Footer Page -->
+    <footer>
+      <div class="container">
+        <p>
+          This website is built on the
+          <a href="https://shikun.io/projects/clarity">Clarity Template</a>,
+          designed by <a href="https://shikun.io/">Shikun Liu</a>.
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+    <script src="clarity/clarity.js"></script>
+    <script src="assets/scripts/main.js"></script>
+    <!-- RD Simulation Scripts -->
+    <script src="assets/scripts/rd.js"></script>
+    <script>
+      // Canvas setup
+      const canvas = document.getElementById("rdCanvas");
+      const ctx = canvas.getContext("2d");
+      const simWidth = 100; // Simulation grid size
+      const simHeight = 100; // Simulation grid size
+      const renderWidth = 500; // Rendering resolution
+      const renderHeight = 500; // Rendering resolution
+      let isRunning = false;
+      let animationId = null;
+
+      // Initialize RD simulation with simulation grid size
+      let rd = new ReactionDiffusion(simWidth, simHeight, {
+        dA: 1.0,
+        dB: 0.5,
+        f: 0.055,
+        k: 0.062,
+        padMode: document.getElementById("padMode").value,
+      });
+
+      // Presets configuration
+      const presets = {
+        y0: {
+          seedType: "random",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 1.0, dB: 0.1, f: 0.028, k: 0.062 },
+        },
+        y1: {
+          seedType: "random",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 0.8, dB: 0.25, f: 0.03, k: 0.065 },
+        },
+        y2: {
+          seedType: "random",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 0.955216, dB: 0.158981, f: 0.041567, k: 0.063682 },
+        },
+        y3: {
+          seedType: "random",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 1.0, dB: 0.343817, f: 0.052043, k: 0.063162 },
+        },
+        y4: {
+          seedType: "random_thin_stripes",
+          seedRadius: 5,
+          padMode: "constant",
+          params: { dA: 0.97904, dB: 0.24993, f: 0.039302, k: 0.059738 },
+        },
+        y5: {
+          seedType: "random_cross",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 0.5678, dB: 0.3027, f: 0.0836, k: 0.0581 },
+        },
+        y6: {
+          seedType: "random_circle_small",
+          seedRadius: 10,
+          padMode: "constant",
+          params: { dA: 1.0, dB: 0.5, f: 0.055, k: 0.062 },
+        },
+        y7: {
+          seedType: "random_triangle",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 0.9838, dB: 0.4, f: 0.0722, k: 0.061 },
+        },
+        y8: {
+          seedType: "random_triangle",
+          seedRadius: 10,
+          padMode: "circular",
+          params: { dA: 1.0, dB: 0.343817, f: 0.052043, k: 0.063162 },
+        },
+        y9: {
+          seedType: "random_triangle",
+          seedRadius: 5,
+          padMode: "constant",
+          params: { dA: 0.97904, dB: 0.24993, f: 0.039302, k: 0.059738 },
+        },
+        y10: {
+          seedType: "random_square",
+          seedRadius: 5,
+          padMode: "constant",
+          params: { dA: 0.97904, dB: 0.24993, f: 0.039302, k: 0.059738 },
+        },
+        y11: {
+          seedType: "random_triangle",
+          seedRadius: 5,
+          padMode: "constant",
+          params: { dA: 0.955216, dB: 0.158981, f: 0.041567, k: 0.063682 },
+        },
+      };
+
+      // Add preset dropdown listener
+      document
+        .getElementById("presetSelect")
+        .addEventListener("change", (e) => {
+          const preset = presets[e.target.value];
+          if (!preset) return;
+
+          // Update seed type
+          document.getElementById("seedType").value = preset.seedType;
+
+          // Update padding mode
+          document.getElementById("padMode").value = preset.padMode;
+
+          // Update parameters
+          Object.entries(preset.params).forEach(([param, value]) => {
+            document.getElementById(param + "Value").textContent =
+              value.toFixed(4);
+            document.getElementById(param).value = value;
+          });
+
+          updateParams();
+          // Initialize with the correct seed radius
+          rd.initialize(preset.seedType, preset.seedRadius);
+          render();
+        });
+
+      // Update reset button to use current seed radius
+      document.getElementById("reset").addEventListener("click", () => {
+        const currentPreset =
+          presets[document.getElementById("presetSelect").value];
+        if (currentPreset) {
+          rd.initialize(currentPreset.seedType, currentPreset.seedRadius);
+        } else {
+          rd.initialize(document.getElementById("seedType").value);
+        }
+        render();
+      });
+
+      // Update seed type change to use current seed radius
+      document.getElementById("seedType").addEventListener("change", () => {
+        const currentPreset =
+          presets[document.getElementById("presetSelect").value];
+        const seedType = document.getElementById("seedType").value;
+
+        // Clear the preset selection when manually changing seed type
+        document.getElementById("presetSelect").value = "";
+
+        // Initialize with the new seed type
+        rd.initialize(seedType);
+        render();
+      });
+
+      // Enhanced color interpolation with better gradient
+      function interpolateColor(val) {
+        // Ensure value is in [0,1]
+        val = Math.max(0, Math.min(1, val));
+
+        const colors = [
+          [0.05, 0.05, 0.4], // deep blue
+          [0, 0, 0.8], // medium blue
+          [0, 0.5, 1], // light blue
+          [0, 1, 1], // cyan
+          [0.5, 1, 0.5], // green-cyan
+          [1, 1, 0], // yellow
+          [1, 0.5, 0], // orange
+          [1, 0, 0], // red
+        ];
+
+        const numColors = colors.length;
+        const idx = val * (numColors - 1);
+        const i = Math.floor(idx);
+        const t = idx - i;
+
+        if (i === numColors - 1) return colors[i];
+
+        // Smooth step interpolation
+        const smoothT = t * t * (3 - 2 * t);
+
+        return [
+          colors[i][0] + smoothT * (colors[i + 1][0] - colors[i][0]),
+          colors[i][1] + smoothT * (colors[i + 1][1] - colors[i][1]),
+          colors[i][2] + smoothT * (colors[i + 1][2] - colors[i][2]),
+        ];
+      }
+
+      // Render function
+      function render() {
+        const state = rd.getBState();
+
+        // Find min and max values in current frame
+        let minVal = state[0];
+        let maxVal = state[0];
+        for (let i = 1; i < state.length; i++) {
+          minVal = Math.min(minVal, state[i]);
+          maxVal = Math.max(maxVal, state[i]);
+        }
+        const range = maxVal - minVal;
+
+        // Create intermediate canvas for the simulation grid
+        const simCanvas = document.createElement("canvas");
+        simCanvas.width = simWidth;
+        simCanvas.height = simHeight;
+        const simCtx = simCanvas.getContext("2d", { alpha: false });
+        const simImageData = simCtx.createImageData(simWidth, simHeight);
+        const simData = simImageData.data;
+
+        // Fill simulation grid canvas with normalized values
+        for (let i = 0; i < simWidth * simHeight; i++) {
+          const normalizedVal = range === 0 ? 0.5 : (state[i] - minVal) / range;
+          const idx = i * 4;
+          simData[idx] = Math.floor(normalizedVal * 255);     // R
+          simData[idx + 1] = Math.floor(normalizedVal * 255); // G
+          simData[idx + 2] = Math.floor(normalizedVal * 255); // B
+          simData[idx + 3] = 255;                             // A
+        }
+
+        simCtx.putImageData(simImageData, 0, 0);
+
+        // Create a temporary canvas for high-quality upscaling
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = renderWidth;
+        tempCanvas.height = renderHeight;
+        const tempCtx = tempCanvas.getContext("2d", { alpha: false });
+
+        // Enable high-quality upscaling with cubic interpolation
+        tempCtx.imageSmoothingEnabled = true;
+        tempCtx.imageSmoothingQuality = "high";
+
+        // Upscale the simulation to render resolution
+        tempCtx.drawImage(
+          simCanvas,
+          0,
+          0,
+          simWidth,
+          simHeight,
+          0,
+          0,
+          renderWidth,
+          renderHeight
+        );
+
+        // Apply Gaussian blur for smoothing
+        tempCtx.filter = "blur(2px)";
+        const finalCanvas = document.createElement("canvas");
+        finalCanvas.width = renderWidth;
+        finalCanvas.height = renderHeight;
+        const finalCtx = finalCanvas.getContext("2d", { alpha: false });
+        finalCtx.drawImage(tempCanvas, 0, 0);
+
+        // Apply colormap
+        const finalImageData = finalCtx.getImageData(0, 0, renderWidth, renderHeight);
+        const finalData = finalImageData.data;
+        for (let i = 0; i < renderWidth * renderHeight; i++) {
+          const idx = i * 4;
+          const val = finalData[idx] / 255.0; // Normalize to [0,1]
+          
+          // Jet colormap (matching matplotlib's implementation)
+          let r, g, b;
+          if (val < 0.125) {
+            r = 0;
+            g = 0;
+            b = 0.5 + 4 * val;
+          } else if (val < 0.375) {
+            r = 0;
+            g = 4 * (val - 0.125);
+            b = 1;
+          } else if (val < 0.625) {
+            r = 4 * (val - 0.375);
+            g = 1;
+            b = 1 - 4 * (val - 0.375);
+          } else if (val < 0.875) {
+            r = 1;
+            g = 1 - 4 * (val - 0.625);
+            b = 0;
+          } else {
+            r = 1 - 4 * (val - 0.875);
+            g = 0;
+            b = 0;
+          }
+
+          finalData[idx] = Math.floor(r * 255);     // R
+          finalData[idx + 1] = Math.floor(g * 255); // G
+          finalData[idx + 2] = Math.floor(b * 255); // B
+          finalData[idx + 3] = 255;                 // A
+        }
+        finalCtx.putImageData(finalImageData, 0, 0);
+
+        // Clear the main canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Enable high-quality image smoothing for final render
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
+        // Draw the final image
+        ctx.drawImage(
+          finalCanvas,
+          0,
+          0,
+          renderWidth,
+          renderHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+      }
+
+      // Animation loop
+      function animate() {
+        if (!isRunning) return;
+
+        rd.step();
+        render();
+        animationId = requestAnimationFrame(animate);
+      }
+
+      // Event Listeners
+      document.getElementById("startStop").addEventListener("click", () => {
+        isRunning = !isRunning;
+        if (isRunning) {
+          animate();
+        } else {
+          cancelAnimationFrame(animationId);
+        }
+      });
+
+      // Parameter change listeners
+      ["dA", "dB", "f", "k"].forEach((param) => {
+        const element = document.getElementById(param);
+        element.addEventListener("input", () => {
+          document.getElementById(param + "Value").textContent = parseFloat(
+            element.value
+          ).toFixed(4);
+          updateParams();
+        });
+      });
+
+      // Add padding mode change listener
+      document
+        .getElementById("padMode")
+        .addEventListener("change", updateParams);
+
+      // Update simulation parameters
+      function updateParams() {
+        rd.params = {
+          dA: parseFloat(document.getElementById("dA").value),
+          dB: parseFloat(document.getElementById("dB").value),
+          f: parseFloat(document.getElementById("f").value),
+          k: parseFloat(document.getElementById("k").value),
+          padMode: document.getElementById("padMode").value,
+        };
+      }
+
+      // Initial render
+      rd.initialize(document.getElementById("seedType").value);
+      render();
+
+      // Process MathJax in select options
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, "presetSelect"]);
+
+      // Re-process MathJax when dropdown is opened
+      document
+        .getElementById("presetSelect")
+        .addEventListener("mousedown", function () {
+          setTimeout(function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, "presetSelect"]);
+          }, 0);
+        });
+    </script>
+
+    <script>
+      // Create an Intersection Observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.playbackRate = 1.0;
+              entry.target.play();
+            } else {
+              // Video is not visible, pause and reset it
+              entry.target.pause();
+              entry.target.currentTime = 0;
+            }
+          });
+        },
+        {
+          threshold: 0.5, // Video will play when 50% of it is visible
+        }
+      );
+
+      // Observe both video elements
+      const embeddingVideo1 = document.getElementById("embeddingVideo1");
+      const embeddingVideo2 = document.getElementById("embeddingVideo2");
+      const splashVideo = document.getElementById("splashVideo");
+
+      if (embeddingVideo1) observer.observe(embeddingVideo1);
+      if (embeddingVideo2) observer.observe(embeddingVideo2);
+      if (splashVideo) observer.observe(splashVideo);
+    </script>
+  </body>
+</html>
