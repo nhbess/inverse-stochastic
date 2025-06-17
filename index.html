@@ -1566,7 +1566,7 @@
 
           sh.step();
           renderSchelling();
-          shAnimationId = requestAnimationFrame(animateSchelling);
+          shAnimationId = setTimeout(() => requestAnimationFrame(animateSchelling), 200);
         }
 
         // Event Listeners for Schelling model
